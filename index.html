@@ -436,7 +436,9 @@
         max-width: 100% !important;
         border-radius: 0 !important;
     }
-    /* ==========================================================================
+
+
+/* ==========================================================================
    📱 MOBILE STACKING FOR THE SUB-ZONE ARRENA PLAYMATS (PART 2B OVERRIDES)
    ========================================================================== */
 
@@ -472,8 +474,8 @@
     .zone-box.thin-bar {
         min-height: 140px !important; /* Keeps Extinguished proportional to upper stacks */
     }
-
 }
+
 
 
 
@@ -1298,7 +1300,7 @@
                                 <div class="die-face ${profile.style} color-${slot.rolledFace}" id="lightspire-rendering-node-${index}" style="width:64px !important; height:64px !important; border-radius:8px; margin: 4px 0; font-size:1.2rem; cursor:pointer; ${slot.isAllocated ? 'border-color:#546ef7; box-shadow:0 0 10px rgba(84,110,247,0.3);' : ''}">
                                     ${symbolContentMarkup}
                                 </div>
-                                <span class="core-name-footer" style="color:#00d2d3;">LS:${profile.name.replace(' Core','')}</span>
+                                <span class="core-name-footer" style="color:#00d2d3;">${profile.name.replace(' Core','')}</span>
                             `;
                         }
                         chamberBox.innerHTML = internalHTML;
@@ -1346,7 +1348,7 @@
                             const box = document.createElement('div');
                             box.className = `micro-die-container ${state.isKindled ? 'is-kindled' : ''}`;
                             box.setAttribute('onclick', `toggleMicroDieKindledState('${key}', ${idx}, 'weapon')`);
-                            box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}" style="border: 1px solid #eccc68; box-shadow:0 0 6px rgba(236,204,104,0.15);"></div><span class="core-name-footer" style="color:#eccc68;">Wpn:${profile.name.replace(' Core','')}</span>`;
+                            box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}" style="border: 1px solid #eccc68; box-shadow:0 0 6px rgba(236,204,104,0.15);"></div><span class="core-name-footer" style="color:#eccc68;">${profile.name.replace(' Core','')}</span>`;
                             weaponContainer.appendChild(box);
                         });
                     }
