@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symbolic d6 Dice Roller</title>
+    <title>Embrulta Core Roller</title>
     <style>
         :root {
             --bg-primary: #121214;
@@ -159,17 +159,19 @@
          PART 2A: HEAD (Dashboard & Grid Interface Layouts)
          ========================================== -->
     <style>
-        /* Dashboard & Form Controls Spacing Framework */
-        .dashboard {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 12px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
+        /* DESKTOP ENGINE LOOKS: Keeps your main window elements centered on computer screens */
+        .top-command-console {
+            position: absolute; 
+            top: 4px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px; 
+            z-index: 10;
         }
+
 
         .section-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: bold; }
         .control-group { display: flex; flex-direction: column; gap: 6px; }
@@ -474,7 +476,7 @@
     .zone-box.thin-bar {
         min-height: 140px !important; /* Keeps Extinguished proportional to upper stacks */
     }
-    
+
     /* ✨ NEW: Forces the 4 chambers to stack into a tight 2x2 grid layout block */
     .lightspire-master-grid {
         grid-template-columns: repeat(2, 1fr) !important; /* Changes from 4-wide down to 2-wide */
@@ -486,6 +488,30 @@
     .lightspire-chamber {
         min-height: 110px !important;
         padding: 8px !important;
+    }
+
+    /* ✨ NEW STICKY ROUTINE: Breaks desktop rules, shifts items to the left margin under subtitles, and floats on scroll */
+    .top-command-console {
+        position: relative; /* Flows naturally underneath subtitle initially */
+        position: -webkit-sticky; /* iOS Safari compatibility hook */
+        position: sticky; /* Automatically snaps into a floating state at top: 0 boundary positions */
+        top: 0 !important; /* Floating lock point right at the ceiling boundary line */
+        
+        left: 0 !important;
+        transform: none !important; /* Disables desktop centering translate properties */
+        align-items: flex-start !important; /* Snaps buttons and dropdowns to align left edge */
+        flex-direction: row !important; /* Spaced side-by-side on mobile rows rather than vertically stacked */
+        
+        background-color: var(--bg-primary); /* Masks layout cards underneath it when floating */
+        padding: 8px 4px !important;
+        margin: 12px 0 !important;
+        width: 100% !important;
+        z-index: 100 !important; /* Sits cleanly on top of cascading mat layers */
+    }
+
+    /* Adjusts the space layout below it so components don't crowd the floating console row banner */
+    .dashboard {
+        margin-top: 10px !important;
     }
 }
 
@@ -766,7 +792,7 @@
             <button class="inline-header-btn history-top-anchor" onclick="toggleSidebar('history-sidebar')">📋 History Log</button>
             
             <!-- Centralized Top Command Console (Progression + Mode Controller Dropdown) -->
-            <div style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10;">
+            <div class="top-command-console">
                 <button class="inline-header-btn" style="border-color: #ffa502; color: #ffa502; padding: 6px 20px; font-size: 0.8rem; border-radius: 30px;" onclick="advanceNextRoundCleanup()">⏳ Next Round</button>
                 
                 <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 150px;">
