@@ -474,6 +474,19 @@
     .zone-box.thin-bar {
         min-height: 140px !important; /* Keeps Extinguished proportional to upper stacks */
     }
+    
+    /* ✨ NEW: Forces the 4 chambers to stack into a tight 2x2 grid layout block */
+    .lightspire-master-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Changes from 4-wide down to 2-wide */
+        gap: 10px !important; /* Cushions elements tightly to save phone vertical space */
+        width: 100% !important;
+    }
+
+    /* Adjusts chamber container dimensions to remain clean and compact inside a 2x2 block split */
+    .lightspire-chamber {
+        min-height: 110px !important;
+        padding: 8px !important;
+    }
 }
 
 
