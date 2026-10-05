@@ -436,6 +436,43 @@
         max-width: 100% !important;
         border-radius: 0 !important;
     }
+    /* ==========================================================================
+   📱 MOBILE STACKING FOR THE SUB-ZONE ARRENA PLAYMATS (PART 2B OVERRIDES)
+   ========================================================================== */
+
+    /* Step 1: Force major column blocks (Player Domain vs Threat Domain) to stack */
+    .battle-fields { 
+        grid-template-columns: 1fr !important; 
+        gap: 20px; 
+    }
+
+    /* Step 2: Overhaul Player sub-zones matrix into 1 column stack (Ignited -> Exhausted -> Extinguished) */
+    .player-zones-grid {
+        grid-template-columns: 1fr !important; /* Strips the side-by-side columns look */
+        grid-template-rows: auto auto auto !important;
+        gap: 12px !important;
+    }
+    .zone-span-bottom {
+        grid-column: span 1 !important; /* Resets the lower bar spanning behavior for mobile stacking */
+    }
+
+    /* Step 3: Overhaul Monster sub-zones matrix into 1 column stack (Corrupted -> Exhausted) */
+    .monster-zones-grid {
+        grid-template-columns: 1fr !important; /* Strips the side-by-side columns look */
+        grid-template-rows: auto auto !important;
+        gap: 12px !important;
+    }
+
+    /* Step 4: Refine playmat box dimensions to sit compactly on mobile screens */
+    .zone-box {
+        min-height: 140px !important; /* Lowers heights to reduce long thumb scrolling cascades */
+        padding: 12px !important;
+        gap: 10px !important;
+    }
+    .zone-box.thin-bar {
+        min-height: 140px !important; /* Keeps Extinguished proportional to upper stacks */
+    }
+
 }
 
 
