@@ -389,6 +389,57 @@
         .btn-monster { background-color: var(--accent-monster); }
         .btn-monster:hover { background-color: var(--accent-monster-hover); }
         .placeholder-text { color: rgba(255,255,255,0.6); font-style: italic; font-size: 0.85rem; text-align: center; width: 100%; }
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE STYLE OVERRIDES (PART 2B CONCLUDING LINES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Changes the grid layout columns from 2 side-by-side slots down to 1 single column stack */
+    .battle-fields { 
+        grid-template-columns: 1fr !important; 
+        gap: 16px; 
+    }
+
+    /* Shrinks the playmat box minimum padding and height limits slightly to save phone screen real estate */
+    .zone-box {
+        min-height: 150px !important;
+        padding: 10px !important;
+        gap: 10px !important;
+    }
+
+    /* Scales down your watermark text labels so they don't visually overlap your icons */
+    .zone-label-watermark {
+        font-size: 0.65rem !important;
+        bottom: 4px !important;
+        right: 8px !important;
+    }
+
+    /* Expands the dashboard margin-top cushion framework to accommodate the top buttons block */
+    .dashboard {
+        margin-top: 40px !important;
+        padding: 10px 14px !important;
+        gap: 12px !important;
+    }
+
+    /* Shrinks the upscaled Lightspire slots slightly if they try to overflow horizontal phone screen bounds */
+    .lightspire-master-grid {
+        gap: 8px !important;
+    }
+    .lightspire-chamber {
+        min-height: 100px !important;
+        padding: 6px !important;
+    }
+
+    /* Forces the inventory vault sidebar drawer to take up the full phone viewport width */
+    .vault-sidebar, sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+    }
+}
+
+
+
     </style>
 
     <style>
@@ -758,7 +809,7 @@
                         <div class="zone-box" id="zone-player-ignited-box">
                             <!-- Upper layer for custom vector cores -->
                             <div class="cores-render-row" id="tray-player-ignited">
-                                <span class="placeholder-text">Kindled dice land here.</span>
+                                <span class="placeholder-text">Ignited cores land here.</span>
                             </div>
                             <!-- Lower dedicated row for numeric speed dice -->
                             <div class="player-speed-row" id="sub-player-speed-row"></div>
@@ -791,7 +842,7 @@
                         <div class="zone-box" id="zone-monster-corrupted-box">
                             <!-- Upper layer for standard monster cores -->
                             <div class="cores-render-row" id="tray-monster-ignited">
-                                <span class="placeholder-text">Malice items generate here.</span>
+                                <span class="placeholder-text">Corrupted cores land here.</span>
                             </div>
                             <!-- Lower restricted width layer to wrap hunger dice perfectly into 2 rows -->
                             <div class="monster-hunger-grid" id="sub-monster-hunger-grid"></div>
