@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embrulta Core Roller</title>
+
+<!-- 1. Import Firebase App Core Framework -->
+<script src="https://gstatic.com"></script>
+
+<!-- 2. Import the distinct Realtime Database Engine library -->
+<script src="https://gstatic.com"></script>
+
     <style>
+
         :root {
             --bg-primary: #121214;
             --bg-secondary: #1a1a1f;
@@ -114,7 +122,7 @@
         /* NEW: History Log Shortcut pinned absolutely to the top right of the main page content */
         .history-top-anchor {
             position: absolute;
-            top: 4px;
+            top: 200px;
             right: 0;
             padding: 8px 16px;
             font-size: 0.8rem;
@@ -592,7 +600,7 @@
 
         /* FIXED: Added missing periods in front of class names so the browser can read the selectors */
         .class-dim { background-color: var(--bg-dice-dim); box-shadow: inset 0 -6px 0px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.1); }
-        .class-corrupt { background-color: var(--bg-dice-corrupt); box-shadow: inset 0 -6px 0px rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
+        .class-corrupt { background-color: var(--bg-dice-corrupt); box-shadow: inset 0 -6px 0px rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.6); }
         .class-defiled { background-color: #000000; box-shadow: inset 0 -6px 0px rgba(165, 94, 234, 0.2), 0 4px 12px rgba(0,0,0,0.6); border: 2px solid #a55eea; }
         
         /* Tier 1 Muted Core Color Backdrops */
@@ -702,9 +710,24 @@
 <body>
     <div class="container">
         <main>
+            <!-- NEW NETWORK PANEL: Multiplayer Room Creation & Sync Console UI -->
+            <div class="dashboard" style="padding: 10px 20px; gap: 16px; margin-top: 10px; border-color: rgba(84, 110, 247, 0.3); background: rgba(84, 110, 247, 0.02); width: 100%;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%;">
+                    <span class="section-title" style="color: var(--accent); margin-bottom: 0;">🌐 Network Lobby</span>
+                    <button class="inline-header-btn" id="btn-create-lobby" style="background: var(--bg-primary); padding: 6px 14px;" onclick="createNewMultiplayerRoomSession()">Host Lobby</button>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="text" id="network-room-input" placeholder="ENTER ROOM CODE" style="font-size: 0.8rem; width: 140px; padding: 4px 8px; text-transform: uppercase; border-color: var(--border-color); text-align: left; background: var(--bg-primary); color: white;">
+                        <button class="inline-header-btn" id="btn-join-lobby" style="border-color: #2ed573; color: #2ed573; padding: 6px 14px;" onclick="joinExistingMultiplayerRoomSession()">Join</button>
+                    </div>
+                    <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+                        <span id="lobby-connection-status-badge" style="font-size: 0.7rem; font-weight: bold; background: #2f2f38; color: var(--text-muted); padding: 4px 10px; border-radius: 20px; text-transform: uppercase;">● Offline Sandbox</span>
+                    </div>
+                </div>
+            </div>
+
             <h1>🎲 Embrulta Core Roller</h1>
             <div class="subtitle">Select, Kindle, Roll, Allocate, Exhaust, and Extinguish Cores in the World of Embrulta</div>
-            
+
             <!-- Pinned Top Right Floating Action History Trigger Element -->
             <button class="inline-header-btn history-top-anchor" onclick="toggleSidebar('history-sidebar')">📋 History Log</button>
             
@@ -714,18 +737,24 @@
                 
                 <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 110px;">
                     <option value="Bind" selected>Bind</option>
+                    <option value="Attunement">Attunement</option>
                     <option value="Steal">Steal</option>
                     <option value="Fallout">Fallout</option>
                 </select>
             </div>
-            
+
+
             <!-- ✨ UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card (Restored Background Card Filling) -->
             <div class="dashboard" style="margin-top: 25px; width: 100%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
                     <span class="section-title" style="color: #00d2d3;">⚡ Lightspire Cores Network</span>
-                    <button class="inline-header-btn" style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px;" onclick="rollAllLightspireNetworkCores()">⚡ Roll All</button>
+                    <button class="inline-header-btn" 
+                            id="lightspire-roll-all-btn"
+                            style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px; position: absolute; left: 50%; transform: translateX(-50%) translateY(-10%); z-index: 5;" 
+                            onclick="rollAllLightspireNetworkCores()">⚡ Roll All</button>
                     <span id="lightspire-pool-feedback" style="font-weight: bold; font-size: 0.78rem; color: #00d2d3;">(0 / 4 Cores Configured)</span>
                 </div>
+
                 <div class="lightspire-master-grid" id="lightspire-pool-inject-tray"></div>
             </div>
 
@@ -859,9 +888,9 @@
 
             <!-- Segmented Target View Selection 3-Tab Control Bar Panel -->
             <div class="vault-tab-bar">
-                <button class="vault-tab-btn is-active" id="btn-tab-active" onclick="switchVaultAllocationTarget('active')">📦 Active</button>
+                <button class="vault-tab-btn is-active" id="btn-tab-lightspire" onclick="switchVaultAllocationTarget('lightspire')" style="color:#00d2d3;">⚡ Lightspire</button>
+                <button class="vault-tab-btn" id="btn-tab-active" onclick="switchVaultAllocationTarget('active')">📦 Active</button>
                 <button class="vault-tab-btn" id="btn-tab-weapon" onclick="switchVaultAllocationTarget('weapon')" style="color:#eccc68;">⚔️ Weapon</button>
-                <button class="vault-tab-btn" id="btn-tab-lightspire" onclick="switchVaultAllocationTarget('lightspire')" style="color:#00d2d3;">⚡ Lightspire</button>
             </div>
             
             <div style="background: rgba(84, 110, 247, 0.05); border: 1px dashed var(--accent); padding: 10px; border-radius: 8px; margin-bottom: 16px;">
@@ -924,11 +953,11 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 <div class="control-group">
-                    <label for="malice-count" style="color: var(--accent-monster)">Malice Rating (Total Pool Cap)</label>
+                    <label for="malice-count" style="color: var(--accent-monster)">Total Malice</label>
                     <input type="number" id="malice-count" min="1" max="30" value="6" style="border-color: rgba(234, 32, 39, 0.3); width: 100%; text-align: left; padding: 10px;" onchange="renderMonsterActiveTraySelectors()">
                 </div>
                 <div class="control-group">
-                    <label for="defiled-count" style="color: #a55eea;">Defiled Substitution Cores</label>
+                    <label for="defiled-count" style="color: #a55eea;">Defiled Cores</label>
                     <select id="defiled-count" style="width: 100%; border-color: rgba(165, 94, 234, 0.4); padding: 10px; font-size: 1rem;" onchange="renderMonsterActiveTraySelectors()">
                         <option value="0" selected>0 Cores</option>
                         <option value="1">1 Core</option>
@@ -1586,8 +1615,6 @@
         // ==========================================================================
         // PART 9C-1: SCRIPT (Tactical Mode Interaction Router)
         // ==========================================================================
-        
-        // INTERCEPTOR GATEWAY: Intercepts taps based on active mode parameters and core environments
         function handleDieClickInteractions(event, dieElement, faction) {
             const dropdown = document.getElementById('global-turn-mode-selector');
             const currentMode = dropdown ? dropdown.value : 'Bind';
@@ -1595,8 +1622,8 @@
             const parentTrayId = dieElement.parentElement ? dieElement.parentElement.id : '';
             const isInIgnitedOrCorrupted = (parentTrayId === 'tray-player-ignited' || parentTrayId === 'sub-player-speed-row' || parentTrayId === 'tray-monster-ignited' || parentTrayId === 'sub-monster-hunger-grid');
 
-            // 🟦 BIND MODE: Toggle blue Allocated banner over field fresh casts
-            if (currentMode === 'Bind') {
+            // 🟦 BIND OR ATTUNEMENT MODES: Toggle blue Allocated status banner over active casts
+            if (currentMode === 'Bind' || currentMode === 'Attunement') {
                 if (isInIgnitedOrCorrupted) {
                     event.stopPropagation();
                     dieElement.classList.remove('is-stolen-state'); 
@@ -1620,7 +1647,7 @@
                 }
             }
 
-            // 📋 FALLOUT MODE (DEFAULT): Route straight into standard popups menu list
+            // 📋 FALLOUT MODE (DEFAULT): Route straight into standard popups list
             spawnMoveMenu(event, dieElement, faction);
         }
 
@@ -1694,7 +1721,7 @@
                     die.className = 'micro-die-container';
                     
                     if (faction === 'monster') {
-                        const coreLabelText = originalCoreStyle.includes('defiled') ? 'Defiled Core' : 'Corrupted';
+                        const coreLabelText = originalCoreStyle.includes('defiled') ? 'Defiled' : 'Corrupted';
                         const accentColorStyle = originalCoreStyle.includes('defiled') ? 'style="color:#a55eea;"' : '';
                         die.innerHTML = `
                             <span class="kindled-top-banner"></span>
@@ -1773,6 +1800,7 @@
         // PART 9C-4: SCRIPT (Lightspire Tactical Operations Engine)
         // ==========================================================================
         
+        // CENTRAL ROUTER FOR UPPER TIER ROW: Directs Lightspire chamber clicks based on global turn modes
         function handleLightspireCoreClicks(event, slotIndex) {
             event.stopPropagation();
             removeExistingMenus();
@@ -1783,7 +1811,8 @@
             const dropdown = document.getElementById('global-turn-mode-selector');
             const currentMode = dropdown ? dropdown.value : 'Bind';
 
-            if (currentMode === 'Bind') {
+            // 🎯 FIXED ENGINE CORE RULE: Lightspire cores are ONLY clickable during the Attunement phase stage
+            if (currentMode === 'Attunement') {
                 if (!slot.isExtinguished) {
                     slot.isAllocated = !slot.isAllocated;
                     renderActiveDashboardSelectors();
@@ -1791,8 +1820,12 @@
                 return;
             }
 
-            if (currentMode === 'Steal') return;
+            // If in Bind or Steal mode, protect the upper tier by making elements completely unclickable
+            if (currentMode === 'Bind' || currentMode === 'Steal') {
+                return;
+            }
 
+            // 📋 FALLOUT MODE: Spawn the unique 2-option context menu tree panel
             const menu = document.createElement('div');
             menu.className = 'dice-context-menu';
 
@@ -1809,6 +1842,7 @@
             menu.style.left = `${event.pageX + 10}px`;
             document.body.appendChild(menu);
         }
+
 
         function executeLightspireAction(slotIndex, actionType) {
             const slot = LIGHTSPIRE_SELECTIONS[slotIndex];
