@@ -159,19 +159,29 @@
          PART 2A: HEAD (Dashboard & Grid Interface Layouts)
          ========================================== -->
     <style>
-        /* DESKTOP ENGINE LOOKS: Keeps your main window elements centered on computer screens */
-        .top-command-console {
-            position: absolute; 
-            top: 4px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 6px; 
-            z-index: 10;
+        /* ==========================================================================
+           📍 FIXED BACKGROUNDS & FLEX CONTAINER LAYOUT FRAMEWORK (PART 2A)
+           ========================================================================== */
+        .dashboard {
+            background-color: var(--bg-secondary, #20202a); /* Restores dark charcoal frame fill */
+            border: 1px solid var(--border-color, #333344); /* Restores dark grid perimeter border line */
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
         }
 
+        /* NEW DESKTOP SIDE-BY-SIDE ANCHOR: Rows the lower trays on widescreen views */
+        .dashboard-row-wrapper {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            align-items: stretch;
+            margin-top: 15px;
+        }
 
         .section-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: bold; }
         .control-group { display: flex; flex-direction: column; gap: 6px; }
@@ -181,132 +191,37 @@
         select { cursor: pointer; }
         input:focus, select:focus { outline: none; border-color: var(--accent); }
 
-        /* Visual Micro-Dice Selection Grid Matrix Layout */
-        .pool-selectors { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 16px; 
-            align-items: center;
-        }
+        .pool-selectors { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .player-pool-workspace-stack { display: flex; flex-direction: column; gap: 12px; width: 100%; }
 
-        /* Split subdivisions stack container inside your player dashboard workspace */
-        .player-pool-workspace-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
-
-        /* ✨ NEW: Lightspire Quad-Chamber Grid Layout Framework */
-        .lightspire-master-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            width: 100%;
-            margin-bottom: 4px;
-        }
-
-        .lightspire-chamber {
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 105px;
-            position: relative;
-            transition: border-color 0.2s, background-color 0.2s;
-        }
-
-        .micro-die-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Upper Status text box parameter bounds */
-        .kindled-top-banner {
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            color: transparent;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: transparent;
-            border: 1px solid transparent;
-            text-align: center;
-            min-width: 54px;
-            height: 20px; 
-            line-height: 1.2;
-            display: inline-block;
-            visibility: hidden;
-            transition: background-color 0.15s ease, border-color 0.15s ease;
-        }
-
-        /* REACTIVE STATES: Handles Kindled, Allocated, and Stolen badges over micro icons */
-        .micro-die-container.is-kindled .kindled-top-banner {
-            color: #ffffff !important;
-            background-color: #d35400 !important;
-            border-color: #b04300 !important;
-            box-shadow: 0 2px 8px rgba(211, 84, 0, 0.35);
-            visibility: visible;
-        }
-
-        /* Persistent footer core name label anchored safely beneath the die card */
-        .core-name-footer {
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            margin-top: 2px;
-            user-select: none;
-        }
-
-        /* Vault Sidebar Content Scaffolding & NEW Segmented 3-Tab Toggles */
+        .lightspire-master-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; margin-bottom: 4px; }
+        .lightspire-chamber { background-color: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 105px; position: relative; transition: border-color 0.2s, background-color 0.2s; }
+        .micro-die-container { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .kindled-top-banner { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; color: transparent; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: transparent; border: 1px solid transparent; text-align: center; min-width: 54px; height: 20px; line-height: 1.2; display: inline-block; visibility: hidden; transition: background-color 0.15s ease, border-color 0.15s ease; }
+        .micro-die-container.is-kindled .kindled-top-banner { color: #ffffff !important; background-color: #d35400 !important; border-color: #b04300 !important; box-shadow: 0 2px 8px rgba(211, 84, 0, 0.35); visibility: visible; }
+        .core-name-footer { font-size: 0.7rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 2px; user-select: none; }
         .vault-row-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
         .vault-item-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
         
-        .vault-tab-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Expanded from 2 to 3 even columns */
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            padding: 4px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            gap: 4px;
-        }
-        .vault-tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px 4px;
-            font-size: 0.72rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .vault-tab-btn.is-active {
-            background-color: var(--accent);
-            color: white;
-        }
-
+        .vault-tab-bar { display: grid; grid-template-columns: repeat(3, 1fr); background-color: var(--bg-primary); border: 1px solid var(--border-color); padding: 4px; border-radius: 8px; margin-bottom: 16px; gap: 4px; }
+        .vault-tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 4px; font-size: 0.72rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.03em; border-radius: 6px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .vault-tab-btn.is-active { background-color: var(--accent); color: white; }
         .counter-controls { display: flex; align-items: center; gap: 6px; }
         .counter-btn { background: #2a2a35; border: 1px solid var(--border-color); color: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-weight: bold; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; }
         .counter-btn:hover { background: #3a3a45; }
         .counter-value { font-size: 1rem; font-weight: bold; width: 18px; text-align: center; }
+
+        /* 📱 RESPONSIVE MEDIA OVERRIDE CRITERIA: Stack row objects cleanly strictly on mobile screen environments */
+        @media (max-width: 768px) {
+            .dashboard-row-wrapper {
+                flex-direction: column !important; /* Forces vertical stacking on smartphones */
+                gap: 16px !important;
+            }
+            .lightspire-master-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
     </style>
 
     <style>
@@ -781,8 +696,10 @@
     </style>
 </head>
 
+<!-- ==========================================
+     PART 3: BODY (Dashboard Settings Layout)
+     ========================================== -->
 <body>
-
     <div class="container">
         <main>
             <h1>🎲 Embrulta Core Roller</h1>
@@ -795,40 +712,34 @@
             <div class="top-command-console">
                 <button class="inline-header-btn" style="border-color: #ffa502; color: #ffa502; padding: 6px 20px; font-size: 0.8rem; border-radius: 30px;" onclick="advanceNextRoundCleanup()">⏳ Next Round</button>
                 
-                <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 150px;">
+                <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 110px;">
                     <option value="Bind" selected>Bind</option>
                     <option value="Steal">Steal</option>
                     <option value="Fallout">Fallout</option>
                 </select>
             </div>
             
-            <!-- SECTION 4L: Full-Width 4-Chamber Lightspire row banner -->
-            <div class="dashboard" style="padding: 12px 20px; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 25px; width: 100%;">
+            <!-- ✨ UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card (Restored Background Card Filling) -->
+            <div class="dashboard" style="margin-top: 25px; width: 100%;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
                     <span class="section-title" style="color: #00d2d3;">⚡ Lightspire Cores Network</span>
-                    
-                    <!-- NEW: Centralized Multi-Cast Roller Trigger Button -->
                     <button class="inline-header-btn" style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px;" onclick="rollAllLightspireNetworkCores()">⚡ Roll All</button>
-                    
                     <span id="lightspire-pool-feedback" style="font-weight: bold; font-size: 0.78rem; color: #00d2d3;">(0 / 4 Cores Configured)</span>
                 </div>
-                <div class="lightspire-master-grid" id="lightspire-pool-inject-tray">
-                    <!-- Four isolated architectural segments generated dynamically by the script engine here -->
-                </div>
+                <div class="lightspire-master-grid" id="lightspire-pool-inject-tray"></div>
             </div>
 
-
-            <!-- SECTION 4A: Lower Level Double-Tray Active Settings Dashboard -->
-            <div class="dashboard" style="padding: 12px 20px; gap: 20px; align-items: stretch; margin-top: 15px;">
+            <!-- 🎯 LOWER LAYOUT WRAPPER ROW: Unifies Side-by-Side Dashboard Columns on Desktop -->
+            <div class="dashboard-row-wrapper">
                 
-                <!-- Left Hand Slot: Player Active Staging Stack Framework -->
-                <div style="flex: 1.2; display: flex; flex-direction: column; gap: 12px;">
+                <!-- COLUMN A: Player Staging Workspace (Standard + Weapon Trays nested inside an isolated background dashboard frame) -->
+                <div class="dashboard" style="flex: 1;">
                     <div class="player-pool-workspace-stack">
                         
-                        <!-- ROW A: Standard Active Cores Pool Row -->
+                        <!-- ROW A-1: Standard Active Cores Pool Row -->
                         <div style="display: flex; flex-direction: column; gap: 6px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
-                                <span class="section-title" style="margin-bottom: 0;">Active Cores</span>
+                                <span class="section-title" style="margin-bottom: 0;">Active Staging Vault</span>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <button class="inline-header-btn" style="padding: 4px 10px; font-size: 0.65rem;" onclick="resetAllActiveDiceKindledFlags()">Clear Selected</button>
                                     <button class="inline-header-btn" onclick="toggleSidebar('vault-sidebar')">📦 Core Vault</button>
@@ -840,7 +751,7 @@
                             </div>
                         </div>
 
-                        <!-- ROW B: Subdivided Weapon Cores Pool Row -->
+                        <!-- ROW A-2: Subdivided Weapon Cores Pool Row -->
                         <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span class="section-title" style="margin-bottom: 0; color: #eccc68;">⚔️ Equipped Weapon Cores</span>
@@ -853,24 +764,20 @@
 
                     </div>
                 </div>
-                
-                <!-- Central Section Splitter line -->
-                <div style="width: 2px; background: var(--border-color); align-self: stretch;"></div>
 
-                <!-- Right Hand Slot: Monster Active Staging Tray -->
-                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                <!-- COLUMN B: Monster Active Staging Area (Nested inside an isolated background dashboard frame) -->
+                <div class="dashboard" style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; width: 100%;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span class="section-title" style="margin-bottom: 0; color: var(--accent-monster)">Monster Active Cores</span>
-                            <button class="inline-header-btn" style="border-color: rgba(234,32,39,0.2); color: #ff4d4d;" onclick="toggleSidebar('threat-sidebar')">💀 Threat Level</button>
+                            <button class="inline-header-btn" style="border-color: rgba(234, 32, 39, 0.2); color: #ff4d4d;" onclick="toggleSidebar('threat-sidebar')">💀 Threat Level</button>
                         </div>
                         <span id="monster-pool-feedback" style="font-weight: bold; font-size: 0.85rem; color: var(--accent-monster)">(6 Cores Loaded)</span>
                     </div>
-                    <div class="pool-selectors" id="monster-pool-inject-tray" style="margin-top: 6px;"></div>
+                    <div class="pool-selectors" id="monster-pool-inject-tray" style="min-height: 52px; margin-top: 4px; width: 100%;"></div>
                 </div>
 
             </div>
-
 
             <!-- SECTION 4B: Re-engineered Sub-Zone Arena Playmats Grid -->
             <div class="battle-fields">
