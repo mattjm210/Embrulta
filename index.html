@@ -230,6 +230,61 @@
             }
         }
 
+        /* ==========================================
+           🎭 MASTER ROLE ASSIGNMENT GATEWAY MODAL STYLES
+           ========================================== */
+        .master-role-gateway-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.25s ease;
+        }
+
+        .role-selection-card {
+            background-color: #20202a;
+            border: 1px solid #333344;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .gateway-title { font-size: 1.25rem; font-weight: bold; color: #ffffff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .gateway-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+        .gateway-btn-group { display: flex; flex-direction: column; gap: 12px; }
+        
+        .gateway-role-btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #ffffff;
+        }
+        .btn-role-player { background-color: #546ef7; border-color: #4459d1; }
+        .btn-role-player:hover { background-color: #4459d1; transform: translateY(-1px); }
+        .btn-role-monster { background-color: #ea2027; border-color: #b5151a; }
+        .btn-role-monster:hover { background-color: #b5151a; transform: translateY(-1px); }
+        .btn-role-observer { background-color: #2f2f38; border-color: #444455; }
+        .btn-role-observer:hover { background-color: #3f3f4d; transform: translateY(-1px); }
+
+        /* 📍 DISCOVERY HIDDEN FILTER STATE OVERRIDES */
+        .force-hide-role-panel {
+            display: none !important;
+        }
+
+
     </style>
 
     <style>
@@ -708,6 +763,22 @@
      PART 3: BODY (Dashboard Settings Layout)
      ========================================== -->
 <body>
+        <!-- ==========================================================================
+         NEW: FULL-SCREEN ROLE INITIALIZATION GATEWAY OVERLAY MODAL UI
+         ========================================================================== -->
+    <div class="master-role-gateway-overlay" id="master-role-setup-modal">
+        <div class="role-selection-card">
+            <div class="gateway-title">What Cores will you use?</div>
+            <div class="gateway-subtitle">Select your tactical domain role for this match session</div>
+            
+            <div class="gateway-btn-group">
+                <button class="gateway-role-btn btn-role-player" onclick="assignActiveMatchRole('player')">✨ Player Vault</button>
+                <button class="gateway-role-btn btn-role-monster" onclick="assignActiveMatchRole('monster')">💀 Monster Domain</button>
+                <button class="gateway-role-btn btn-role-observer" onclick="assignActiveMatchRole('observer')">👁️ Observer View</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <main>
             <!-- NEW NETWORK PANEL: Multiplayer Room Creation & Sync Console UI -->
@@ -1945,6 +2016,65 @@
             const logEl = document.getElementById('history-log');
             if (logEl) logEl.innerHTML = '';
         }
+
+                // ==========================================
+        // PART 9D REVISIONS: Active Match Role Assignments Engine
+        // ==========================================
+        let USER_MATCH_ROLE = 'observer'; // Baseline default channel assignment
+
+        function assignActiveMatchRole(selectedRole) {
+            USER_MATCH_ROLE = selectedRole;
+            
+            // Close down the full-screen prompt blocking panel frame layout
+            const modal = document.getElementById('master-role-setup-modal');
+            if (modal) modal.style.display = 'none';
+
+            // Reset visual override tags classes before drawing fresh filters
+            document.querySelectorAll('.force-hide-role-panel').forEach(el => el.classList.remove('force-hide-role-panel'));
+
+            // Pull layout objects identifiers nodes from across upper trays and lower playmats columns
+            const playerDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(1)');
+            const monsterDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(2)');
+            const playerBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(1)');
+            const monsterBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(2)');
+
+            // 📍 CONDITION A: PLAYER ASSIGNMENT FILTER MATRIX
+            if (selectedRole === 'player') {
+                if (monsterDashboardCard) monsterDashboardCard.classList.add('force-hide-role-panel');
+                if (monsterBattleColumn) monsterBattleColumn.classList.add('force-hide-role-panel');
+                
+                // Hide monster settings adjustments fields triggers from within sidebars drawer views
+                const threatBtn = document.querySelector("button[onclick*='threat-sidebar']");
+                if (threatBtn) threatBtn.classList.add('force-hide-role-panel');
+            } 
+            
+            // 📍 CONDITION B: MONSTER ASSIGNMENT FILTER MATRIX
+            else if (selectedRole === 'monster') {
+                if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
+                if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
+                
+                // Hide player inventory configurations fields triggers from within sidebars drawer views
+                const vaultBtn = document.querySelector("button[onclick*='vault-sidebar']");
+                if (vaultBtn) vaultBtn.classList.add('force-hide-role-panel');
+                const clearDiceBtn = document.querySelector("button[onclick*='resetAllActiveDiceKindledFlags']");
+                if (clearDiceBtn) clearDiceBtn.classList.add('force-hide-role-panel');
+            }
+
+            // Redraw active screens tokens elements grids cleanly to project updated structures
+            renderActiveDashboardSelectors();
+            renderMonsterActiveTraySelectors();
+            checkZonePlaceholders();
+        }
+
+        // START NEW GAME MACRO: Pops the role modal blocker card container back up on user command triggers
+        function triggerFreshMatchRebootSequence() {
+            resetAllVaultCountersToZero();
+            clearHistory();
+            
+            const modal = document.getElementById('master-role-setup-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+
 
         // Master Lifecycle Initializer hook: Spawns your player, weapon, and monster staging tokens on page launch boot
         window.addEventListener('DOMContentLoaded', () => {
