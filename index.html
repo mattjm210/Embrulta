@@ -228,6 +228,40 @@
             .lightspire-master-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
             }
+
+    /* ⚡ STEP A: Force the Lightspire section header title words to stack onto 3 distinct lines */
+    .lightspire-mobile-title-stack {
+        display: inline-block !important;
+        white-space: normal !important;
+        word-spacing: 100vw !important; /* Forces a clean vertical wrap after every single word */
+        line-height: 1.2 !important;
+        max-width: 80px !important;
+        text-align: left !important;
+    }
+
+    /* ⚡ STEP B: Turn the Roll All button into a tight two-line stacked element */
+    #lightspire-roll-all-btn {
+        padding: 4px 10px !important;
+        font-size: 0.65rem !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        width: 65px !important; /* Constrains width to force a clean wrap between "Roll" and "All" */
+        text-align: center !important;
+        
+        /* Retain your vertical translation adjustments while preserving mobile horizontal alignment overrides */
+        transform: translateY(-2px) !important; 
+        left: 45% !important; /* Nudges it slightly leftward to clear space for the right counter */
+    }
+
+    /* ⚡ STEP C: Pull the right status counter string text as far right as possible */
+    #lightspire-pool-feedback {
+        font-size: 0.72rem !important;
+        text-align: right !important;
+        padding-right: 2px !important;
+        margin-left: auto !important; /* Firmly pushes the element to lock against the right border edge */
+    }
+
+
         }
 
         /* ==========================================
@@ -816,18 +850,26 @@
 
 
             <!-- ✨ UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card (Restored Background Card Filling) -->
-            <div class="dashboard" style="margin-top: 25px; width: 100%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
-                    <span class="section-title" style="color: #00d2d3;">⚡ Lightspire Cores Network</span>
+            <!-- UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card -->
+            <!-- 📍 FIXED HOOK: Added the unique id attribute container so the roles engine can sweep this entire tray out of view -->
+            <div class="dashboard" id="zone-lightspire-master-wrapper" style="margin-top: 25px; width: 100%;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; position: relative;">
+                    
+                    <!-- FIXED HOOK: Added class wrapper to handle 3-line word wrap transformations on vertical screens -->
+                    <span class="section-title lightspire-mobile-title-stack" style="color: #00d2d3; margin-bottom: 0;">⚡ Lightspire Cores Network</span>
+                    
                     <button class="inline-header-btn" 
                             id="lightspire-roll-all-btn"
-                            style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px; position: absolute; left: 50%; transform: translateX(-50%) translateY(-10%); z-index: 5;" 
+                            style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px; position: absolute; left: 50%; transform: translateX(-50%) translateY(-2px); z-index: 5;" 
                             onclick="rollAllLightspireNetworkCores()">⚡ Roll All</button>
+                    
                     <span id="lightspire-pool-feedback" style="font-weight: bold; font-size: 0.78rem; color: #00d2d3;">(0 / 4 Cores Configured)</span>
                 </div>
 
                 <div class="lightspire-master-grid" id="lightspire-pool-inject-tray"></div>
             </div>
+
 
             <!-- 🎯 LOWER LAYOUT WRAPPER ROW: Unifies Side-by-Side Dashboard Columns on Desktop -->
             <div class="dashboard-row-wrapper">
@@ -2053,6 +2095,10 @@
                 if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
                 if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
                 
+                // Hide Lightspire core tray
+                const lightspireMasterTray = document.getElementById('zone-lightspire-master-wrapper');
+                if (lightspireMasterTray) lightspireMasterTray.classList.add('force-hide-role-panel');
+
                 // Hide player inventory configurations fields triggers from within sidebars drawer views
                 const vaultBtn = document.querySelector("button[onclick*='vault-sidebar']");
                 if (vaultBtn) vaultBtn.classList.add('force-hide-role-panel');
