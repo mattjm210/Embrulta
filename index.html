@@ -239,7 +239,7 @@
         text-align: left !important;
     }
 
-    /* ⚡ STEP B: Turn the Roll All button into a tight two-line stacked element */
+    /* ⚡ STEP B: PERFECTLY RE-CENTER the tight two-line stacked Roll All button on mobile screens */
     #lightspire-roll-all-btn {
         padding: 4px 10px !important;
         font-size: 0.65rem !important;
@@ -248,17 +248,25 @@
         width: 65px !important; /* Constrains width to force a clean wrap between "Roll" and "All" */
         text-align: center !important;
         
-        /* Retain your vertical translation adjustments while preserving mobile horizontal alignment overrides */
-        transform: translateY(-2px) !important; 
-        left: 45% !important; /* Nudges it slightly leftward to clear space for the right counter */
+        /* FIXED: Snaps the element back to the absolute horizontal center axis line on phone viewports */
+        position: absolute !important;
+        left: 50% !important; 
+        transform: translateX(-50%) translateY(-2px) !important; 
+        z-index: 5 !important;
     }
 
-    /* ⚡ STEP C: Pull the right status counter string text as far right as possible */
+    /* ⚡ STEP C: Force the right status counter string text to split onto 2 lines after "Cores" */
     #lightspire-pool-feedback {
         font-size: 0.72rem !important;
         text-align: right !important;
         padding-right: 2px !important;
         margin-left: auto !important; /* Firmly pushes the element to lock against the right border edge */
+        
+        /* FIXED: Wraps text cleanly into a stacked two-line block component */
+        display: inline-block !important;
+        white-space: normal !important;
+        max-width: 80px !important; /* Limits the bounding width so text wraps right after "Cores" */
+        line-height: 1.3 !important;
     }
 
 
