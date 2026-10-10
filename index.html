@@ -163,13 +163,70 @@
 
     </style>
 
-        <!-- ==========================================
-         PART 2A: HEAD (Dashboard & Grid Interface Layouts)
-         ========================================== -->
     <style>
         /* ==========================================================================
            📍 FIXED BACKGROUNDS & FLEX CONTAINER LAYOUT FRAMEWORK (PART 2A)
            ========================================================================== */
+
+                /* ==========================================================================
+           📍 FIXED LAYOUT WIDTH CONTAINMENT ENGINE (PART 2A OVERRIDES)
+           ========================================================================== */
+        /* Forces all cards to calculate padding inward, blocking right-side layout overflow */
+        .dashboard, .dashboard-row-wrapper, .lightspire-master-grid {
+            box-sizing: border-box !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Standardizes full-width card structures */
+        .dashboard {
+            background-color: var(--bg-secondary, #20202a); 
+            border: 1px solid var(--border-color, #333344); 
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .dashboard-row-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            margin-top: 15px;
+        }
+
+        /* Dynamic 50/50 split modifier for when Lightspire is hidden from the sidebar */
+        .vault-tab-bar.is-player-split-view {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        /* 📱 MOBILE RESPONSIVE LAYOUT CARDS BALANCING */
+        @media (max-width: 768px) {
+            /* Force both the lower wrapper grid and individual nested content cards down to strict viewport dimensions */
+            .dashboard-row-wrapper, .dashboard, .pool-selectors {
+                flex-direction: column !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 12px 14px !important;
+            }
+
+            /* Ensures the monster dashboard card scales cleanly without breaking the phone border */
+            .dashboard-row-wrapper > .dashboard {
+                width: 100% !important;
+                flex: none !important; /* Disables flex stretch bugs on vertical touch screens */
+            }
+
+            .lightspire-master-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+        }
+
+         
         .dashboard {
             background-color: var(--bg-secondary, #20202a); /* Restores dark charcoal frame fill */
             border: 1px solid var(--border-color, #333344); /* Restores dark grid perimeter border line */
@@ -251,8 +308,9 @@
         
         /* FIXED: Snaps the element back to the absolute horizontal center axis line on phone viewports */
         position: absolute !important;
-        left: 50% !important; 
-        transform: translateX(-50%) translateY(-2px) !important; 
+        left: 40% !important;
+        top: 0% !important;
+        transform: translateX(-50%) translateY(0%) !important; 
         z-index: 5 !important;
     }
 
@@ -467,10 +525,12 @@
     /* Snaps the Spire Vault button to a neat left-aligned positioning below the title row stack on mobile viewports */
     .spire-vault-trigger {
         position: absolute !important;
-        left: 0px !important;
-        top: 40px !important; /* Drops it smoothly beneath the stacked word lines layout */
+        left: 70% !important;
+        top: 0px !important; /* Drops it smoothly beneath the stacked word lines layout */
         width: 80px !important;
-        padding: 4px 6px !important;
+        padding: 4px 16px !important;
+        transform: translateX(-50%) translateY(0%) !important; 
+        z-index: 5 !important;
     }
 }
 
@@ -839,8 +899,30 @@
 
     <div class="container">
         <main>
-            <!-- NEW NETWORK PANEL: Multiplayer Room Creation & Sync Console UI -->
-            <div class="dashboard" style="padding: 10px 20px; gap: 16px; margin-top: 10px; border-color: rgba(84, 110, 247, 0.3); background: rgba(84, 110, 247, 0.02); width: 100%;">
+            <!-- ==========================================
+                 PART 3: BODY (Dashboard Settings Layout)
+                 ========================================== -->
+            <h1>🎲 Custom Symbol Roller</h1>
+            
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 4px;">
+                <div class="subtitle" style="margin-bottom: 0;">Pool System: Dual Core Selection Deck</div>
+                <button class="inline-header-btn" style="border-color: #00d2d3; color: #00d2d3; padding: 2px 10px; font-size: 0.65rem;" onclick="triggerFreshMatchRebootSequence()">🔄 Start New Game</button>
+            </div>
+            
+            <!-- Centralized Top Command Console (Sticky header bar layout) -->
+            <div class="top-command-console">
+                <button class="inline-header-btn" style="border-color: #ffa502; color: #ffa502; padding: 6px 20px; font-size: 0.8rem; border-radius: 30px;" onclick="advanceNextRoundCleanup()">⏳ Next Round</button>
+                
+                <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 110px;" onchange="renderActiveDashboardSelectors()">
+                    <option value="Bind" selected>Bind</option>
+                    <option value="Attunement">Attunement</option>
+                    <option value="Steal">Steal</option>
+                    <option value="Fallout">Fallout</option>
+                </select>
+            </div>
+
+            <!-- 🌐 MULTIPLAYER NETWORK PANEL: Room Sync Console UI (Removed width: 100% inline stretch overrides) -->
+            <div class="dashboard" style="padding: 10px 20px; gap: 16px; margin-top: 10px; border-color: rgba(84, 110, 247, 0.3); background: rgba(84, 110, 247, 0.02);">
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%;">
                     <span class="section-title" style="color: var(--accent); margin-bottom: 0;">🌐 Network Lobby</span>
                     <button class="inline-header-btn" id="btn-create-lobby" style="background: var(--bg-primary); padding: 6px 14px;" onclick="createNewMultiplayerRoomSession()">Host Lobby</button>
@@ -854,33 +936,11 @@
                 </div>
             </div>
 
-            <h1>🎲 Embrulta Core Roller</h1>
-            <div class="subtitle">Select, Kindle, Roll, Allocate, Exhaust, and Extinguish Cores in the World of Embrulta</div>
-
-            <!-- Pinned Top Right Floating Action History Trigger Element -->
-            <button class="inline-header-btn history-top-anchor" onclick="toggleSidebar('history-sidebar')">📋 History Log</button>
-            
-            <!-- Centralized Top Command Console (Progression + Mode Controller Dropdown) -->
-            <div class="top-command-console">
-                <button class="inline-header-btn" style="border-color: #ffa502; color: #ffa502; padding: 6px 20px; font-size: 0.8rem; border-radius: 30px;" onclick="advanceNextRoundCleanup()">⏳ Next Round</button>
-                
-                <select id="global-turn-mode-selector" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; text-align: center; width: 110px;">
-                    <option value="Bind" selected>Bind</option>
-                    <option value="Attunement">Attunement</option>
-                    <option value="Steal">Steal</option>
-                    <option value="Fallout">Fallout</option>
-                </select>
-            </div>
-
-
-            <!-- UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card -->
-            <div class="dashboard" id="zone-lightspire-master-wrapper" style="margin-top: 25px; width: 100%;">
-                
+            <!-- ✨ UPPER MASTER TRAY CONTAINER: Full-Width Lightspire Network card (Removed width: 100% inline stretch overrides) -->
+            <div class="dashboard" id="zone-lightspire-master-wrapper" style="margin-top: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; position: relative;">
-                    
                     <span class="section-title lightspire-mobile-title-stack" style="color: #00d2d3; margin-bottom: 0;">⚡ Lightspire Cores Network</span>
                     
-                    <!-- FIXED HOOK: Added the unique class 'spire-vault-trigger' to lock down explicit visibility checks -->
                     <button class="inline-header-btn spire-vault-trigger" 
                             style="border-color: #00d2d3; color: #00d2d3; padding: 4px 10px; font-size: 0.65rem; border-radius: 20px; position: absolute; left: 28%; z-index: 5;"
                             onclick="toggleSidebar('vault-sidebar'); switchVaultAllocationTarget('lightspire');">📦 Spire Vault</button>
@@ -892,15 +952,13 @@
                     
                     <span id="lightspire-pool-feedback" style="font-weight: bold; font-size: 0.78rem; color: #00d2d3;">(0 / 4 Cores Configured)</span>
                 </div>
-
-                <div class="lightspire-master-grid" id="lightspire-pool-inject-tray"></div>
+                <div class="lightspire-master-grid" id="lightspire-pool-inject-tray" style="margin-top: 12px;"></div>
             </div>
-
 
             <!-- 🎯 LOWER LAYOUT WRAPPER ROW: Unifies Side-by-Side Dashboard Columns on Desktop -->
             <div class="dashboard-row-wrapper">
                 
-                <!-- COLUMN A: Player Staging Workspace (Standard + Weapon Trays nested inside an isolated background dashboard frame) -->
+                <!-- COLUMN A: Player Staging Workspace (Standard + Weapon Trays) -->
                 <div class="dashboard" style="flex: 1;">
                     <div class="player-pool-workspace-stack">
                         
@@ -933,16 +991,16 @@
                     </div>
                 </div>
 
-                <!-- COLUMN B: Monster Active Staging Area (Nested inside an isolated background dashboard frame) -->
+                <!-- COLUMN B: Monster Active Staging Area (Removed width: 100% inline stretch overrides) -->
                 <div class="dashboard" style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span class="section-title" style="margin-bottom: 0; color: var(--accent-monster)">Monster Active Cores</span>
                             <button class="inline-header-btn" style="border-color: rgba(234, 32, 39, 0.2); color: #ff4d4d;" onclick="toggleSidebar('threat-sidebar')">💀 Threat Level</button>
                         </div>
                         <span id="monster-pool-feedback" style="font-weight: bold; font-size: 0.85rem; color: var(--accent-monster)">(6 Cores Loaded)</span>
                     </div>
-                    <div class="pool-selectors" id="monster-pool-inject-tray" style="min-height: 52px; margin-top: 4px; width: 100%;"></div>
+                    <div class="pool-selectors" id="monster-pool-inject-tray" style="min-height: 52px; margin-top: 4px;"></div>
                 </div>
 
             </div>
@@ -2129,82 +2187,92 @@
             if (logEl) logEl.innerHTML = '';
         }
 
-// ==========================================================================
-// PART 9D: SCRIPT (Fixed Role Allocations Visibility Engine)
-// ==========================================================================
-function assignActiveMatchRole(selectedRole) {
-    USER_MATCH_ROLE = selectedRole;
-    
-    const modal = document.getElementById('master-role-setup-modal');
-    if (modal) modal.style.display = 'none';
-
-    // Clear previous force-hide utility classes fresh
-    document.querySelectorAll('.force-hide-role-panel').forEach(el => el.classList.remove('force-hide-role-panel'));
-
-    const playerDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(1)');
-    const monsterDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(2)');
-    const playerBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(1)');
-    const monsterBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(2)');
-    
-    const lightspireMasterTray = document.getElementById('zone-lightspire-master-wrapper');
-    const lightspireTabBtn = document.getElementById('btn-tab-lightspire');
-    const activeTabBtn = document.getElementById('btn-tab-active');
-    const weaponTabBtn = document.getElementById('btn-tab-weapon');
-
-    // 📍 CONDITION A: PLAYER ROLE TRACK
-    if (selectedRole === 'player') {
-        if (monsterDashboardCard) monsterDashboardCard.classList.add('force-hide-role-panel');
-        if (monsterBattleColumn) monsterBattleColumn.classList.add('force-hide-role-panel');
-        if (lightspireMasterTray) lightspireMasterTray.classList.add('force-hide-role-panel');
-        if (lightspireTabBtn) lightspireTabBtn.classList.add('force-hide-role-panel');
-
-        const threatBtn = document.querySelector("button[onclick*='threat-sidebar']");
-        if (threatBtn) threatBtn.classList.add('force-hide-role-panel');
-        
-        switchVaultAllocationTarget('active'); 
-    } 
-    
-    // 📍 CONDITION B: MONSTER ROLE TRACK
-    else if (selectedRole === 'monster') {
-        if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
-        if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
-        
-        // Unhide Lightspire container
-        if (lightspireMasterTray) {
-            lightspireMasterTray.classList.remove('force-hide-role-panel');
-        }
-        
-        // Force-unhide the Lightspire sidebar switcher tab button specifically
-        if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
-
-        // Hide regular player tabs inside the drawer menu
-        if (activeTabBtn) activeTabBtn.classList.add('force-hide-role-panel');
-        if (weaponTabBtn) weaponTabBtn.classList.add('force-hide-role-panel');
-
-        // FIXED: Targeted lookup sweeps only the regular player vault button inside the hidden top staging card
-        if (playerDashboardCard) {
-            const regularVaultBtn = playerDashboardCard.querySelector("button[onclick*='vault-sidebar']");
-            if (regularVaultBtn) regularVaultBtn.classList.add('force-hide-role-panel');
+        // ==========================================================================
+        // PART 9D REVISIONS: Tab Bar Grid Column Balancing
+        // ==========================================================================
+        function assignActiveMatchRole(selectedRole) {
+            USER_MATCH_ROLE = selectedRole;
             
-            const clearDiceBtn = playerDashboardCard.querySelector("button[onclick*='resetAllActiveDiceKindledFlags']");
-            if (clearDiceBtn) clearDiceBtn.classList.add('force-hide-role-panel');
-        }
-        
-        switchVaultAllocationTarget('lightspire'); // Auto-default to the custom Spire tab view
-    }
-    
-    // 📍 CONDITION C: OBSERVER ROLE TRACK
-    else if (selectedRole === 'observer') {
-        if (activeTabBtn) activeTabBtn.classList.remove('force-hide-role-panel');
-        if (weaponTabBtn) weaponTabBtn.classList.remove('force-hide-role-panel');
-        if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
-        switchVaultAllocationTarget('active');
-    }
+            const modal = document.getElementById('master-role-setup-modal');
+            if (modal) modal.style.display = 'none';
 
-    renderActiveDashboardSelectors();
-    renderMonsterActiveTraySelectors();
-    checkZonePlaceholders();
-}
+            // Clear previous force-hide utility classes fresh
+            document.querySelectorAll('.force-hide-role-panel').forEach(el => el.classList.remove('force-hide-role-panel'));
+
+            const playerDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(1)');
+            const monsterDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(2)');
+            const playerBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(1)');
+            const monsterBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(2)');
+            
+            const lightspireMasterTray = document.getElementById('zone-lightspire-master-wrapper');
+            const lightspireTabBtn = document.getElementById('btn-tab-lightspire');
+            const activeTabBtn = document.getElementById('btn-tab-active');
+            const weaponTabBtn = document.getElementById('btn-tab-weapon');
+            
+            // 🎯 LOCATE THE TAB BAR BLOCK CONTAINER NODE
+            const vaultTabBarElement = document.querySelector('.vault-tab-bar');
+
+            // 📍 CONDITION A: PLAYER ROLE TRACK
+            if (selectedRole === 'player') {
+                if (monsterDashboardCard) monsterDashboardCard.classList.add('force-hide-role-panel');
+                if (monsterBattleColumn) monsterBattleColumn.classList.add('force-hide-role-panel');
+                if (lightspireMasterTray) lightspireMasterTray.classList.add('force-hide-role-panel');
+                if (lightspireTabBtn) lightspireTabBtn.classList.add('force-hide-role-panel');
+
+                const threatBtn = document.querySelector("button[onclick*='threat-sidebar']");
+                if (threatBtn) threatBtn.classList.add('force-hide-role-panel');
+                
+                // ✨ NEW: Force the sidebar tab grid header to split 50/50 into long halves
+                if (vaultTabBarElement) vaultTabBarElement.classList.add('is-player-split-view');
+                
+                switchVaultAllocationTarget('active'); 
+            } 
+            
+            // 📍 CONDITION B: MONSTER ROLE TRACK
+            else if (selectedRole === 'monster') {
+                if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
+                if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
+                
+                if (lightspireMasterTray) {
+                    lightspireMasterTray.classList.remove('force-hide-role-panel');
+                    const spireVaultBtn = lightspireMasterTray.querySelector('.spire-vault-trigger');
+                    if (spireVaultBtn) spireVaultBtn.classList.remove('force-hide-role-panel');
+                }
+                
+                if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
+                if (activeTabBtn) activeTabBtn.classList.add('force-hide-role-panel');
+                if (weaponTabBtn) weaponTabBtn.classList.add('force-hide-role-panel');
+
+                if (playerDashboardCard) {
+                    const regularVaultBtn = playerDashboardCard.querySelector("button[onclick*='vault-sidebar']");
+                    if (regularVaultBtn) regularVaultBtn.classList.add('force-hide-role-panel');
+                    
+                    const clearDiceBtn = playerDashboardCard.querySelector("button[onclick*='resetAllActiveDiceKindledFlags']");
+                    if (clearDiceBtn) clearDiceBtn.classList.add('force-hide-role-panel');
+                }
+                
+                // Remove player split class so it falls back to single option focus parameters
+                if (vaultTabBarElement) vaultTabBarElement.classList.remove('is-player-split-view');
+                
+                switchVaultAllocationTarget('lightspire'); 
+            }
+            
+            // 📍 CONDITION C: OBSERVER ROLE TRACK (RESTORE 3-WAY SPLIT)
+            else if (selectedRole === 'observer') {
+                if (activeTabBtn) activeTabBtn.classList.remove('force-hide-role-panel');
+                if (weaponTabBtn) weaponTabBtn.classList.remove('force-hide-role-panel');
+                if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
+                
+                // Remove player split class so observer retains all 3 options across the row width
+                if (vaultTabBarElement) vaultTabBarElement.classList.remove('is-player-split-view');
+                
+                switchVaultAllocationTarget('active');
+            }
+
+            renderActiveDashboardSelectors();
+            renderMonsterActiveTraySelectors();
+            checkZonePlaceholders();
+        }
 
 
         // START NEW GAME MACRO: Pops the role modal blocker card container back up on user command triggers
