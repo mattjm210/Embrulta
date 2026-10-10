@@ -611,6 +611,41 @@
     }
 }
 
+        /* ==========================================================================
+           📱 FIXED: MULTI-SIDEBAR viewport BOUNDS ENGINE (PART 2F OVERRIDES)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* ✨ CRUCIAL FIX: Force both left and right sidebars to calculate padding INWARD */
+            .vault-sidebar, sidebar, #vault-sidebar, #threat-sidebar {
+                width: 100% !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important; /* Prevents padding from inflating the panel width past 100% */
+                padding: 16px !important;
+                border-radius: 0px !important;
+            }
+
+            /* Fixes structural horizontal position alignments when drawers are toggled ACTIVE */
+            .vault-sidebar.active, #vault-sidebar.active {
+                left: 0 !important;
+                right: auto !important;
+                transform: none !important;
+            }
+
+            sidebar.active, #threat-sidebar.active {
+                right: 0 !important;
+                left: auto !important;
+                transform: none !important;
+            }
+            
+            /* Ensures counter rows inside the sliders don't try to overflow internal panel bounds */
+            .vault-item-row {
+                box-sizing: border-box !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+
 
 
 
