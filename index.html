@@ -25,7 +25,7 @@
             --border-color: #2f2f38;
         }
 
-        * {
+        {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -229,6 +229,7 @@
                 grid-template-columns: repeat(2, 1fr) !important;
             }
 
+
     /* ⚡ STEP A: Force the Lightspire section header title words to stack onto 3 distinct lines */
     .lightspire-mobile-title-stack {
         display: inline-block !important;
@@ -270,10 +271,11 @@
     }
 
 
+
         }
 
         /* ==========================================
-           🎭 MASTER ROLE ASSIGNMENT GATEWAY MODAL STYLES
+        🎭 MASTER ROLE ASSIGNMENT GATEWAY MODAL STYLES
            ========================================== */
         .master-role-gateway-overlay {
             position: fixed;
@@ -458,6 +460,20 @@
         max-width: 100% !important;
         border-radius: 0 !important;
     }
+
+    @media (max-width: 768px) {
+    /* ... inside your existing mobile styles query ... */
+
+    /* Snaps the Spire Vault button to a neat left-aligned positioning below the title row stack on mobile viewports */
+    .spire-vault-trigger {
+        position: absolute !important;
+        left: 0px !important;
+        top: 40px !important; /* Drops it smoothly beneath the stacked word lines layout */
+        width: 80px !important;
+        padding: 4px 6px !important;
+    }
+}
+
 
 
 /* ==========================================================================
@@ -715,7 +731,7 @@
         /* TIER 3: Brilliant Cores Cosmetics */
         .class-prismatic { background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(220,225,235,0.5)), radial-gradient(circle, #ffffff 10%, transparent 11%); background-size: 100% 100%, 8px 8px; border: 2px solid #dcdde1; box-shadow: inset 0 0 15px rgba(255,255,255,0.6), 0 4px 10px rgba(0,0,0,0.4); }
         .class-aurora { background: linear-gradient(135deg, rgba(52,152,219,0.45), rgba(155,89,182,0.35)), radial-gradient(circle, #f5f6fa 8%, transparent 9%); background-size: 100% 100%, 10px 10px; border: 2px solid #9b59b6; box-shadow: inset 0 0 12px rgba(255,255,255,0.3), 0 4px 10px rgba(0,0,0,0.4); }
-        .class-chromatic { background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05)), radial-gradient(circle, #eccc68 12%, transparent 13%); background-size: 100% 100%, 7px 7px; border: 2px solid #eccc68; box-shadow: inset 0 0 10px rgba(235,196,104,0.3), 0 4px 10px rgba(0,0,0,0.5); }
+        .class-chromatic { background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(235,196,104,0.05)), radial-gradient(circle, #eccc68 12%, transparent 13%); background-size: 100% 100%, 7px 7px; border: 2px solid #eccc68; box-shadow: inset 0 0 10px rgba(235,196,104,0.3), 0 4px 10px rgba(0,0,0,0.5); }
 
         /* TIER 4: Blinding End-Game Cores Stripes */
         .class-slayer { background: linear-gradient(45deg, #ff4757 25%, #ffffff 25%, #ffffff 50%, #ff4757 50%, #ff4757 75%, #ffffff 75%, #ffffff 100%); background-size: 24px 24px; border: 3px solid #ff4757; box-shadow: 0 4px 12px rgba(255,71,87,0.4); }
@@ -857,16 +873,18 @@
             </div>
 
 
-            <!-- ✨ UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card (Restored Background Card Filling) -->
             <!-- UPPER LAYER CONTAINER: Full-Width 4-Chamber Lightspire row card -->
-            <!-- 📍 FIXED HOOK: Added the unique id attribute container so the roles engine can sweep this entire tray out of view -->
             <div class="dashboard" id="zone-lightspire-master-wrapper" style="margin-top: 25px; width: 100%;">
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; position: relative;">
                     
-                    <!-- FIXED HOOK: Added class wrapper to handle 3-line word wrap transformations on vertical screens -->
                     <span class="section-title lightspire-mobile-title-stack" style="color: #00d2d3; margin-bottom: 0;">⚡ Lightspire Cores Network</span>
                     
+                    <!-- FIXED HOOK: Added the unique class 'spire-vault-trigger' to lock down explicit visibility checks -->
+                    <button class="inline-header-btn spire-vault-trigger" 
+                            style="border-color: #00d2d3; color: #00d2d3; padding: 4px 10px; font-size: 0.65rem; border-radius: 20px; position: absolute; left: 28%; z-index: 5;"
+                            onclick="toggleSidebar('vault-sidebar'); switchVaultAllocationTarget('lightspire');">📦 Spire Vault</button>
+
                     <button class="inline-header-btn" 
                             id="lightspire-roll-all-btn"
                             style="border-color: #00d2d3; color: #00d2d3; padding: 4px 14px; font-size: 0.7rem; border-radius: 20px; position: absolute; left: 50%; transform: translateX(-50%) translateY(-2px); z-index: 5;" 
@@ -1157,9 +1175,19 @@
 
         const GLOBAL_MATCH_LIMIT = 5;
 
+        // 📍 NEW RECON TRACKERS: Blocks duplicate casting passes until Next Round resets them
+        let HAS_PLAYER_ROLLED_THIS_ROUND = false;
+        let HAS_MONSTER_ROLLED_THIS_ROUND = false;
+
+
         
         // --- Stage 3A: Sidebar Allocation Tab Toggles & Constraints ---
         function switchVaultAllocationTarget(targetTab) {
+            // 🎯 FIXED ENGINE CORE RULE: Block player role screens from ever gaining visual access to Lightspire allocations configurations
+            if (USER_MATCH_ROLE === 'player' && targetTab === 'lightspire') {
+                targetTab = 'active'; // Force fallback redirect anchor safety guard
+            }
+
             CURRENT_VAULT_TAB = targetTab;
             document.getElementById('btn-tab-active').classList.toggle('is-active', targetTab === 'active');
             document.getElementById('btn-tab-weapon').classList.toggle('is-active', targetTab === 'weapon');
@@ -1179,12 +1207,10 @@
                 if (selectorNode) selectorNode.style.display = 'none'; 
             }
 
-            // FIXED FALLBACK LOGIC: Safely map and cross-check matching storage integers across all three registry frames
             let relevantStocks = VAULT_STOCKS;
             if (targetTab === 'weapon') relevantStocks = WEAPON_STOCKS;
             if (targetTab === 'lightspire') relevantStocks = LIGHTSPIRE_STOCKS;
 
-            // Ensure that even on new boot instances, missing index fields safely fallback to zero to block empty slots rendering crashes
             for (const key of Object.keys(DICE_PROFILES)) {
                 if (relevantStocks[key] === undefined) { relevantStocks[key] = 0; }
                 const spanNode = document.getElementById(`vault-val-${key}`) || document.getElementById(`vault-val-${key.replace('_cores', '')}`);
@@ -1192,12 +1218,13 @@
             }
             
             const currentTotal = Object.values(relevantStocks).reduce((a, b) => a + b, 0);
-            let limitCap = parseInt(document.getElementById('vault-max-cap-selector').value) || 2;
+            let limitCap = parseInt(document.getElementById('vault-max-cap-selector').value) || 4;
             if (CURRENT_VAULT_TAB === 'weapon') limitCap = 2;
             if (CURRENT_VAULT_TAB === 'lightspire') limitCap = 4;
             
             document.getElementById('vault-allocation-feedback').textContent = `Used: ${currentTotal} / ${limitCap}`;
         }
+
 
         function adjustVaultValue(key, step) {
             if (key.indexOf('_cores') === -1) { key = key + '_cores'; }
@@ -1257,7 +1284,9 @@
             renderActiveDashboardSelectors();
         }
 
-        // --- Stage 3B: Staging Arrays Calibration & Selection State Trackers ---
+        // ==========================================================================
+        // PART 8B: SCRIPT (Staging Arrays Calibration & Selection State Trackers)
+        // ==========================================================================
         function syncSelectionPoolWithVaultStocks() {
             // A: Sync Standard Staging selections pool lists
             for (const key of Object.keys(VAULT_STOCKS)) {
@@ -1274,20 +1303,27 @@
                 while (list.length < WEAPON_STOCKS[key]) { list.push({ isKindled: false, isWeaponCore: true }); }
             }
             
-            // C: FIXED BACKEND STATE MAPPING: Reconcile Lightspire array trackers, initializing a face symbol on generation passes
+            // C: FIXED INITIALIZATION PASS: Force-populate the 4 network chambers so they don't collapse into a thin bar
             const oldSpireSelections = [...LIGHTSPIRE_SELECTIONS];
             LIGHTSPIRE_SELECTIONS = [];
             
+            // Calculate total items actively added via the sidebar counters
+            let activeConfiguredCount = Object.values(LIGHTSPIRE_STOCKS).reduce((a, b) => a + b, 0);
+
+            // 📍 BASELINE PATCH: If launching a fresh session (all 0), pre-load 4 default Dim Cores into your grid slots
+            if (activeConfiguredCount === 0) {
+                // Pre-assign 4 functional Dim Cores into your database state matrix so the tray retains its full size
+                LIGHTSPIRE_STOCKS['dim_cores'] = 4;
+            }
+
             for (const [key, count] of Object.entries(LIGHTSPIRE_STOCKS)) {
                 for (let i = 0; i < count; i++) {
                     if (LIGHTSPIRE_SELECTIONS.length < 4) {
-                        // Check if an entry for this exact configuration index position existed previously to retain its rolled symbol
                         const existingMatch = oldSpireSelections.find(s => s.coreKey === key && !LIGHTSPIRE_SELECTIONS.includes(s));
                         
                         if (existingMatch) {
                             LIGHTSPIRE_SELECTIONS.push(existingMatch);
                         } else {
-                            // Assign a fresh rolled face value immediately on instance birth hooks
                             const profileFaces = DICE_PROFILES[key].faces;
                             const initialFace = profileFaces[Math.floor(Math.random() * profileFaces.length)];
                             
@@ -1302,6 +1338,8 @@
                     }
                 }
             }
+
+            // Fallback layout builder to secure minimum box parameters
             while (LIGHTSPIRE_SELECTIONS.length < 4) {
                 LIGHTSPIRE_SELECTIONS.push({ coreKey: null, rolledFace: 'X', isKindled: false, isAllocated: false, isExtinguished: false });
             }
@@ -1340,8 +1378,6 @@
                 LIGHTSPIRE_SELECTIONS.forEach((slot, index) => {
                     const chamberBox = document.createElement('div');
                     chamberBox.className = 'lightspire-chamber';
-                    
-                    // FIXED: Expanded chamber minimum height boundaries to smoothly cushion upscaled dice
                     chamberBox.style.minHeight = '120px';
                     
                     if (slot.coreKey) {
@@ -1351,52 +1387,39 @@
                         
                         let internalHTML = '';
                         
-                        // Condition A: Extinguished state overlay graphics layout blueprints
                         if (slot.isExtinguished) {
                             chamberBox.style.backgroundColor = 'rgba(0,0,0,0.4)';
                             chamberBox.style.borderColor = '#2f2f38';
                             internalHTML = `
                                 <span class="kindled-top-banner" style="background-color:#2f2f38 !important; border-color:#444 !important; color:var(--text-muted) !important; visibility:visible;">EXTINGUISHED</span>
-                                <!-- FIXED: Raised width and height from 52px to 64px -->
                                 <div class="die-face ${profile.style}" style="width:64px !important; height:64px !important; opacity:0.18; filter:grayscale(1); pointer-events:none; margin: 4px 0;">
                                     ${SYMBOL_LIBRARY['X']}
                                 </div>
                                 <span class="core-name-footer" style="color:var(--text-muted); opacity:0.5;">${profile.name}</span>
                             `;
                         } 
-                        // Condition B: Standard structural core layouts injecting live face symbols
                         else {
                             let statusBannerHtml = '';
-                            let dynamicBorderOverride = '';
-                            
                             if (slot.isAllocated) {
-                                // Keeps the top outer banner bar active
                                 statusBannerHtml = `<span class="kindled-top-banner" style="background-color:#2f3542 !important; border-color:#546ef7 !important; color:#ffffff !important; visibility:visible; box-shadow:0 0 8px rgba(84,110,247,0.3);">ALLOCATED</span>`;
-                                dynamicBorderOverride = 'style="border: 1px solid #546ef7; box-shadow:0 0 10px rgba(84,110,247,0.3);"';
-                                chamberBox.style.borderColor = '#546ef7';
                             } else {
                                 statusBannerHtml = `<span class="kindled-top-banner"></span>`;
-                                chamberBox.style.borderColor = 'var(--border-color)';
                             }
 
-                            // Generate inner vector symbol markup, handling Tier 3 split face slashes perfectly
                             let symbolContentMarkup = '';
                             if (slot.rolledFace && slot.rolledFace.indexOf('/') !== -1) {
                                 const [l, r] = slot.rolledFace.split('/');
-                                // Adjusted inner positioning to center perfectly inside the larger 64px box frame canvas
-                                symbolContentMarkup = `<div class="double-symbol-layout"><div class="symbol-slash-divider" style="font-size:1.6rem;">/</div><div class="symbol-top-left" style="top:4px; left:4px;">${SYMBOL_LIBRARY[l]}</div><div class="symbol-bottom-right" style="bottom:28px; right:28px;">${SYMBOL_LIBRARY[r]}</div></div>`;
+                                symbolContentMarkup = `<div class="double-symbol-layout"><div class="symbol-slash-divider" style="font-size:1.6rem;">/</div><div class="symbol-top-left" style="top:4px; left:4px;">${SYMBOL_LIBRARY[l]}</div><div class="symbol-bottom-right" style="bottom:12px; right:12px;">${SYMBOL_LIBRARY[r]}</div></div>`;
                             } else {
                                 symbolContentMarkup = SYMBOL_LIBRARY[slot.rolledFace || 'X'];
                             }
 
-                            // FIXED BUILD: Removed "is-allocated-state" class to drop the overlapping banner entirely
-                            // FIXED: Raised width and height to 64px, and enlarged font-size to scale symbols nicely
                             internalHTML = `
                                 ${statusBannerHtml}
                                 <div class="die-face ${profile.style} color-${slot.rolledFace}" id="lightspire-rendering-node-${index}" style="width:64px !important; height:64px !important; border-radius:8px; margin: 4px 0; font-size:1.2rem; cursor:pointer; ${slot.isAllocated ? 'border-color:#546ef7; box-shadow:0 0 10px rgba(84,110,247,0.3);' : ''}">
                                     ${symbolContentMarkup}
                                 </div>
-                                <span class="core-name-footer" style="color:#00d2d3;">${profile.name.replace(' Core','')}</span>
+                                <span class="core-name-footer" style="color:#00d2d3;">LS:${profile.name.replace(' Core','')}</span>
                             `;
                         }
                         chamberBox.innerHTML = internalHTML;
@@ -1414,21 +1437,33 @@
             const activeContainer = document.getElementById('active-pool-inject-tray');
             if (activeContainer) {
                 activeContainer.innerHTML = '';
-                let totalRenderedActive = 0;
-                for (const [key, count] of Object.entries(VAULT_STOCKS)) {
-                    if (count > 0) {
-                        const profile = DICE_PROFILES[key];
-                        (ACTIVE_SELECTIONS[key] || []).forEach((state, idx) => {
-                            totalRenderedActive++;
-                            const box = document.createElement('div');
-                            box.className = `micro-die-container ${state.isKindled ? 'is-kindled' : ''}`;
-                            box.setAttribute('onclick', `toggleMicroDieKindledState('${key}', ${idx}, 'active')`);
-                            box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}"></div><span class="core-name-footer">${profile.name}</span>`;
-                            activeContainer.appendChild(box);
-                        });
+                
+                const dropdown = document.getElementById('global-turn-mode-selector');
+                const currentPhase = dropdown ? dropdown.value : 'Bind';
+
+                if (currentPhase === 'Bind' && USER_MATCH_ROLE !== 'player' && USER_MATCH_ROLE !== 'observer') {
+                    activeContainer.className = "hidden-blindfold-card-mask";
+                    activeContainer.innerHTML = "🌑 PLAYER DICE REVEALED IN ATTUNEMENT PHASE";
+                } 
+                else {
+                    activeContainer.className = "pool-selectors";
+                    let totalRenderedActive = 0;
+                    
+                    for (const [key, count] of Object.entries(VAULT_STOCKS)) {
+                        if (count > 0) {
+                            const profile = DICE_PROFILES[key];
+                            (ACTIVE_SELECTIONS[key] || []).forEach((state, idx) => {
+                                totalRenderedActive++;
+                                const box = document.createElement('div');
+                                box.className = `micro-die-container ${state.isKindled ? 'is-kindled' : ''}`;
+                                box.setAttribute('onclick', `toggleMicroDieKindledState('${key}', ${idx}, 'active')`);
+                                box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}"></div><span class="core-name-footer">${profile.name}</span>`;
+                                activeContainer.appendChild(box);
+                            });
+                        }
                     }
+                    if (totalRenderedActive === 0) activeContainer.innerHTML = '<span class="placeholder-text" style="font-size:0.82rem;">Open Vault to add standard cores.</span>';
                 }
-                if (totalRenderedActive === 0) activeContainer.innerHTML = '<span class="placeholder-text" style="font-size:0.82rem;">Open Vault to add standard cores.</span>';
             }
 
             // 3. Draw equipped weapon cards inside Row B
@@ -1444,17 +1479,19 @@
                             const box = document.createElement('div');
                             box.className = `micro-die-container ${state.isKindled ? 'is-kindled' : ''}`;
                             box.setAttribute('onclick', `toggleMicroDieKindledState('${key}', ${idx}, 'weapon')`);
-                            box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}" style="border: 1px solid #eccc68; box-shadow:0 0 6px rgba(236,204,104,0.15);"></div><span class="core-name-footer" style="color:#eccc68;">${profile.name.replace(' Core','')}</span>`;
+                            box.innerHTML = `<span class="kindled-top-banner">${state.isKindled ? 'KINDLED' : ''}</span><div class="micro-die ${profile.style}" style="border: 1px solid #eccc68; box-shadow:0 0 6px rgba(236,204,104,0.15);"></div><span class="core-name-footer" style="color:#eccc68;">Wpn:${profile.name.replace(' Core','')}</span>`;
                             weaponContainer.appendChild(box);
                         });
                     }
                 }
-                document.getElementById('weapon-pool-feedback').textContent = `(${totalRenderedWeapons} Kindled)`;
-                if (totalRenderedWeapons === 0) weaponContainer.innerHTML = '<span class="placeholder-text" style="font-size:0.82rem; color:rgba(255,255,255,0.4);">No Weapon Cores assigned. Toggle the sidebar tab slot.</span>';
+                document.getElementById('weapon-pool-feedback').textContent = `(${totalRenderedWeapons} Cores Staged)`;
+                if (totalRenderedWeapons === 0) weaponContainer.innerHTML = '<span class="placeholder-text" style="font-size:0.82rem; color:rgba(255,255,255,0.4);">No Weapon Cores assigned. Toggle the slot inside your Core Vault sidebar.</span>';
             }
 
             const totalKindled = calculateTotalKindledCount();
             document.getElementById('pool-feedback').textContent = `(${totalKindled} / ${GLOBAL_MATCH_LIMIT} Kindled)`;
+            
+            // 🎯 FUNCTION TERMINATES CLEANLY HERE (No trailing self-calls)
         }
 
         // ==========================================================================
@@ -1523,15 +1560,21 @@
 
         // --- Stage 4A: Player Execution & Casting Subroutines ---
         function rollVaultDice() {
+            // 🎯 FIXED ENGINE CORE RULE: Block multiple clicks if player already rolled this turn
+            if (HAS_PLAYER_ROLLED_THIS_ROUND) {
+                alert("⚠️ Player Cores have already been cast this round! Press Next Round to unlock.");
+                return;
+            }
+
             const totalKindledCount = calculateTotalKindledCount();
             if (totalKindledCount === 0) return;
 
+            // Lock the button instantly
+            HAS_PLAYER_ROLLED_THIS_ROUND = true;
+
             const tray = document.getElementById('tray-player-ignited');
             const speedRow = document.getElementById('sub-player-speed-row');
-            if (!tray || !speedRow) return;
-            
-            tray.innerHTML = ''; 
-            speedRow.innerHTML = ''; 
+            // ... rest of your player rolling function stays exactly the same ...
 
             let historyTallies = { X: 0, A: 0, B: 0, C: 0, D: 0, S: 0, Y: 0, Z: 0 };
 
@@ -1615,6 +1658,12 @@
 
         // --- Stage 4B: Monster Execution & Casting Subroutines ---
         function rollMonsterDice() {
+            // 🎯 FIXED ENGINE CORE RULE: Block multiple clicks if monster already rolled this turn
+            if (HAS_MONSTER_ROLLED_THIS_ROUND) {
+                alert("⚠️ Monster Cores have already been cast this round! Press Next Round to unlock.");
+                return;
+            }
+
             const monsterDashboardTray = document.getElementById('monster-pool-inject-tray');
             const tray = document.getElementById('tray-monster-ignited');
             const hungerGrid = document.getElementById('sub-monster-hunger-grid');
@@ -1626,7 +1675,12 @@
 
             if (stagedMonsterDice.length === 0 && totalMalice === 0) return; 
 
+            // Lock the button instantly
+            HAS_MONSTER_ROLLED_THIS_ROUND = true;
+
             tray.innerHTML = ''; 
+            // ... rest of your monster rolling function stays exactly the same ...
+
             hungerGrid.innerHTML = ''; 
 
             let historyTallies = { X: 0, A: 0, B: 0, C: 0, D: 0, S: 0, Y: 0, Z: 0 };
@@ -1729,8 +1783,16 @@
                 });
             });
             
+            // ... [your existing player and monster container cleanup loops stay exactly the same] ...
+            
             removeExistingMenus();
             checkZonePlaceholders();
+
+            // 🎯 FIXED: Release the roll constraints locks so players can spin dice on the new round turn
+            HAS_PLAYER_ROLLED_THIS_ROUND = false;
+            HAS_MONSTER_ROLLED_THIS_ROUND = false;
+        
+
         }
 
         // ==========================================================================
@@ -2067,58 +2129,83 @@
             if (logEl) logEl.innerHTML = '';
         }
 
-                // ==========================================
-        // PART 9D REVISIONS: Active Match Role Assignments Engine
-        // ==========================================
-        let USER_MATCH_ROLE = 'observer'; // Baseline default channel assignment
+// ==========================================================================
+// PART 9D: SCRIPT (Fixed Role Allocations Visibility Engine)
+// ==========================================================================
+function assignActiveMatchRole(selectedRole) {
+    USER_MATCH_ROLE = selectedRole;
+    
+    const modal = document.getElementById('master-role-setup-modal');
+    if (modal) modal.style.display = 'none';
 
-        function assignActiveMatchRole(selectedRole) {
-            USER_MATCH_ROLE = selectedRole;
-            
-            // Close down the full-screen prompt blocking panel frame layout
-            const modal = document.getElementById('master-role-setup-modal');
-            if (modal) modal.style.display = 'none';
+    // Clear previous force-hide utility classes fresh
+    document.querySelectorAll('.force-hide-role-panel').forEach(el => el.classList.remove('force-hide-role-panel'));
 
-            // Reset visual override tags classes before drawing fresh filters
-            document.querySelectorAll('.force-hide-role-panel').forEach(el => el.classList.remove('force-hide-role-panel'));
+    const playerDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(1)');
+    const monsterDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(2)');
+    const playerBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(1)');
+    const monsterBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(2)');
+    
+    const lightspireMasterTray = document.getElementById('zone-lightspire-master-wrapper');
+    const lightspireTabBtn = document.getElementById('btn-tab-lightspire');
+    const activeTabBtn = document.getElementById('btn-tab-active');
+    const weaponTabBtn = document.getElementById('btn-tab-weapon');
 
-            // Pull layout objects identifiers nodes from across upper trays and lower playmats columns
-            const playerDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(1)');
-            const monsterDashboardCard = document.querySelector('.dashboard-row-wrapper > .dashboard:nth-child(2)');
-            const playerBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(1)');
-            const monsterBattleColumn = document.querySelector('.battle-fields > .field-column:nth-child(2)');
+    // 📍 CONDITION A: PLAYER ROLE TRACK
+    if (selectedRole === 'player') {
+        if (monsterDashboardCard) monsterDashboardCard.classList.add('force-hide-role-panel');
+        if (monsterBattleColumn) monsterBattleColumn.classList.add('force-hide-role-panel');
+        if (lightspireMasterTray) lightspireMasterTray.classList.add('force-hide-role-panel');
+        if (lightspireTabBtn) lightspireTabBtn.classList.add('force-hide-role-panel');
 
-            // 📍 CONDITION A: PLAYER ASSIGNMENT FILTER MATRIX
-            if (selectedRole === 'player') {
-                if (monsterDashboardCard) monsterDashboardCard.classList.add('force-hide-role-panel');
-                if (monsterBattleColumn) monsterBattleColumn.classList.add('force-hide-role-panel');
-                
-                // Hide monster settings adjustments fields triggers from within sidebars drawer views
-                const threatBtn = document.querySelector("button[onclick*='threat-sidebar']");
-                if (threatBtn) threatBtn.classList.add('force-hide-role-panel');
-            } 
-            
-            // 📍 CONDITION B: MONSTER ASSIGNMENT FILTER MATRIX
-            else if (selectedRole === 'monster') {
-                if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
-                if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
-                
-                // Hide Lightspire core tray
-                const lightspireMasterTray = document.getElementById('zone-lightspire-master-wrapper');
-                if (lightspireMasterTray) lightspireMasterTray.classList.add('force-hide-role-panel');
-
-                // Hide player inventory configurations fields triggers from within sidebars drawer views
-                const vaultBtn = document.querySelector("button[onclick*='vault-sidebar']");
-                if (vaultBtn) vaultBtn.classList.add('force-hide-role-panel');
-                const clearDiceBtn = document.querySelector("button[onclick*='resetAllActiveDiceKindledFlags']");
-                if (clearDiceBtn) clearDiceBtn.classList.add('force-hide-role-panel');
-            }
-
-            // Redraw active screens tokens elements grids cleanly to project updated structures
-            renderActiveDashboardSelectors();
-            renderMonsterActiveTraySelectors();
-            checkZonePlaceholders();
+        const threatBtn = document.querySelector("button[onclick*='threat-sidebar']");
+        if (threatBtn) threatBtn.classList.add('force-hide-role-panel');
+        
+        switchVaultAllocationTarget('active'); 
+    } 
+    
+    // 📍 CONDITION B: MONSTER ROLE TRACK
+    else if (selectedRole === 'monster') {
+        if (playerDashboardCard) playerDashboardCard.classList.add('force-hide-role-panel');
+        if (playerBattleColumn) playerBattleColumn.classList.add('force-hide-role-panel');
+        
+        // Unhide Lightspire container
+        if (lightspireMasterTray) {
+            lightspireMasterTray.classList.remove('force-hide-role-panel');
         }
+        
+        // Force-unhide the Lightspire sidebar switcher tab button specifically
+        if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
+
+        // Hide regular player tabs inside the drawer menu
+        if (activeTabBtn) activeTabBtn.classList.add('force-hide-role-panel');
+        if (weaponTabBtn) weaponTabBtn.classList.add('force-hide-role-panel');
+
+        // FIXED: Targeted lookup sweeps only the regular player vault button inside the hidden top staging card
+        if (playerDashboardCard) {
+            const regularVaultBtn = playerDashboardCard.querySelector("button[onclick*='vault-sidebar']");
+            if (regularVaultBtn) regularVaultBtn.classList.add('force-hide-role-panel');
+            
+            const clearDiceBtn = playerDashboardCard.querySelector("button[onclick*='resetAllActiveDiceKindledFlags']");
+            if (clearDiceBtn) clearDiceBtn.classList.add('force-hide-role-panel');
+        }
+        
+        switchVaultAllocationTarget('lightspire'); // Auto-default to the custom Spire tab view
+    }
+    
+    // 📍 CONDITION C: OBSERVER ROLE TRACK
+    else if (selectedRole === 'observer') {
+        if (activeTabBtn) activeTabBtn.classList.remove('force-hide-role-panel');
+        if (weaponTabBtn) weaponTabBtn.classList.remove('force-hide-role-panel');
+        if (lightspireTabBtn) lightspireTabBtn.classList.remove('force-hide-role-panel');
+        switchVaultAllocationTarget('active');
+    }
+
+    renderActiveDashboardSelectors();
+    renderMonsterActiveTraySelectors();
+    checkZonePlaceholders();
+}
+
 
         // START NEW GAME MACRO: Pops the role modal blocker card container back up on user command triggers
         function triggerFreshMatchRebootSequence() {
